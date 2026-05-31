@@ -2,8 +2,13 @@ from fastapi import FastAPI
 from sqlalchemy import text
 
 from app.api.health import router as health_router
+from app.core.base import Base
 from app.core.config import settings
 from app.core.database import engine
+
+import app.models
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.APP_NAME,
