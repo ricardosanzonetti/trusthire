@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: trusthire
+      POSTGRES_USER: trusthire
+      POSTGRES_PASSWORD: trusthire
+    ports:
+      - "5432:5432"
