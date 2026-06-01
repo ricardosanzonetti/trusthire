@@ -8,7 +8,8 @@ from app.schemas.candidate import (
 )
 from app.services.candidate_service import (
     create_candidate,
-    get_candidates
+    get_candidates,
+    get_candidate_by_id
 )
 
 router = APIRouter(
@@ -39,3 +40,17 @@ def get_candidates_endpoint(
     db: Session = Depends(get_db)
 ):
     return get_candidates(db)
+
+
+@router.get(
+    "/{candidate_id}",
+    response_model=CandidateResponse
+)
+def get_candidate_by_id_endpoint(
+    candidate_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_candidate_by_id(
+        db=db,
+        candidate_id=candidate_id
+    )

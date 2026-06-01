@@ -24,3 +24,14 @@ def create_candidate(
 
 def get_candidates(db: Session):
     return db.query(Candidate).all()
+
+
+def get_candidate_by_id(
+    db: Session,
+    candidate_id: int
+):
+    return (
+        db.query(Candidate)
+        .filter(Candidate.id == candidate_id)
+        .first()
+    )
