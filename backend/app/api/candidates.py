@@ -4,14 +4,16 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.schemas.candidate import (
     CandidateCreate,
-    CandidateResponse
+    CandidateResponse,
+    VerificationResponse
 )
 from app.services.candidate_service import (
     create_candidate,
     get_candidates,
     get_candidate_by_id,
     delete_candidate,
-    update_candidate
+    update_candidate,
+    verify_linkedin
 )
 
 router = APIRouter(
@@ -83,6 +85,20 @@ def delete_candidate_endpoint(
     db: Session = Depends(get_db)
 ):
     return delete_candidate(
+        db=db,
+        candidate_id=candidate_id
+    )
+
+
+@router.post(
+    "/{candidate_id}/verify-linkedin",
+    response_model=VerificationResponse
+)
+def verify_linkedin_endpoint(
+    candidate_id: int,
+    db: Session = Depends(get_db)
+):
+    return verify_linkedin(
         db=db,
         candidate_id=candidate_id
     )

@@ -93,3 +93,33 @@ def update_candidate(
     db.refresh(candidate)
 
     return candidate
+
+
+def verify_linkedin(
+    db: Session,
+    candidate_id: int
+):
+    candidate = (
+        db.query(Candidate)
+        .filter(Candidate.id == candidate_id)
+        .first()
+    )
+
+    if not candidate:
+        raise HTTPException(
+            status_code=404,
+            detail="Candidate not found"
+        )
+
+    if candidate.linkedin_url:
+        candidate.verification_status = "verified"
+    else:
+        candidate.verification_status = "failed"
+
+    db.commit()
+    db.refresh(candidate)
+
+    return {
+        "message": "Verification completed",
+        "verification_status": candidate.verification_status
+    }

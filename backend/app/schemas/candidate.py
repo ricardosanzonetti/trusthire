@@ -17,3 +17,8 @@ class CandidateResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+
+class VerificationResponse(BaseModel):
+    message: str
+    verification_status: str
