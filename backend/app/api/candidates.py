@@ -10,7 +10,8 @@ from app.services.candidate_service import (
     create_candidate,
     get_candidates,
     get_candidate_by_id,
-    delete_candidate
+    delete_candidate,
+    update_candidate
 )
 
 router = APIRouter(
@@ -54,6 +55,22 @@ def get_candidate_by_id_endpoint(
     return get_candidate_by_id(
         db=db,
         candidate_id=candidate_id
+    )
+
+
+@router.put(
+    "/{candidate_id}",
+    response_model=CandidateResponse
+)
+def update_candidate_endpoint(
+    candidate_id: int,
+    candidate: CandidateCreate,
+    db: Session = Depends(get_db)
+):
+    return update_candidate(
+        db=db,
+        candidate_id=candidate_id,
+        candidate_data=candidate
     )
 
 
