@@ -8,12 +8,11 @@ class Settings(BaseSettings):
 
     POSTGRES_DB: str = "trusthire"
     POSTGRES_USER: str = "trusthire"
-    POSTGRES_PASSWORD: str = "trusthire" 
+    POSTGRES_PASSWORD: str = "trusthire"
     POSTGRES_HOST: str = "postgres"
     POSTGRES_PORT: int = 5432
 
     model_config = SettingsConfigDict(
-        env_file=".env",
         case_sensitive=True
     )
 
