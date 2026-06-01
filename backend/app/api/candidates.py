@@ -6,7 +6,10 @@ from app.schemas.candidate import (
     CandidateCreate,
     CandidateResponse
 )
-from app.services.candidate_service import create_candidate
+from app.services.candidate_service import (
+    create_candidate,
+    get_candidates
+)
 
 router = APIRouter(
     prefix="/candidates",
@@ -26,3 +29,13 @@ def create_candidate_endpoint(
         db=db,
         candidate_data=candidate
     )
+
+
+@router.get(
+    "/",
+    response_model=list[CandidateResponse]
+)
+def get_candidates_endpoint(
+    db: Session = Depends(get_db)
+):
+    return get_candidates(db)

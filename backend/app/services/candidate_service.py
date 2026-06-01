@@ -20,3 +20,7 @@ def create_candidate(
     db.refresh(candidate)
 
     return candidate
+
+
+def get_candidates(db: Session):
+    return db.query(Candidate).all()
