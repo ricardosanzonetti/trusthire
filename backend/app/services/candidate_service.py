@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.candidate import Candidate
@@ -30,8 +31,38 @@ def get_candidate_by_id(
     db: Session,
     candidate_id: int
 ):
-    return (
+    candidate = (
         db.query(Candidate)
         .filter(Candidate.id == candidate_id)
         .first()
     )
+
+    if not candidate:
+        raise HTTPException(
+            status_code=404,
+            detail="Candidate not found"
+        )
+
+    return candidate
+
+
+def delete_candidate(
+    db: Session,
+    candidate_id: int
+):
+    candidate = (
+        db.query(Candidate)
+        .filter(Candidate.id == candidate_id)
+        .first()
+    )
+
+    if not candidate:
+        raise HTTPException(
+            status_code=404,
+            detail="Candidate not found"
+        )
+
+    db.delete(candidate)
+    db.commit()
+
+    return candidate

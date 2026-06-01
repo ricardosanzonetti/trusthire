@@ -9,7 +9,8 @@ from app.schemas.candidate import (
 from app.services.candidate_service import (
     create_candidate,
     get_candidates,
-    get_candidate_by_id
+    get_candidate_by_id,
+    delete_candidate
 )
 
 router = APIRouter(
@@ -51,6 +52,20 @@ def get_candidate_by_id_endpoint(
     db: Session = Depends(get_db)
 ):
     return get_candidate_by_id(
+        db=db,
+        candidate_id=candidate_id
+    )
+
+
+@router.delete(
+    "/{candidate_id}",
+    response_model=CandidateResponse
+)
+def delete_candidate_endpoint(
+    candidate_id: int,
+    db: Session = Depends(get_db)
+):
+    return delete_candidate(
         db=db,
         candidate_id=candidate_id
     )
