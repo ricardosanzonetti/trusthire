@@ -13,6 +13,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17
+
+        env:
+          POSTGRES_DB: trusthire
+          POSTGRES_USER: trusthire
+          POSTGRES_PASSWORD: trusthire
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      POSTGRES_DB: trusthire
+      POSTGRES_USER: trusthire
+      POSTGRES_PASSWORD: trusthire
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
