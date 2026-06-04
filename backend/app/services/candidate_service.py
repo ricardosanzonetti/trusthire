@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.candidate import Candidate
+from app.repositories.candidate_repository import CandidateRepository
 from app.schemas.candidate import CandidateCreate
 
 
@@ -10,32 +11,30 @@ def create_candidate(
     candidate_data: CandidateCreate
 ) -> Candidate:
 
+    repository = CandidateRepository(db)
+
     candidate = Candidate(
         full_name=candidate_data.full_name,
         email=candidate_data.email,
         linkedin_url=candidate_data.linkedin_url
     )
 
-    db.add(candidate)
-    db.commit()
-    db.refresh(candidate)
-
-    return candidate
+    return repository.create(candidate)
 
 
 def get_candidates(db: Session):
-    return db.query(Candidate).all()
+    repository = CandidateRepository(db)
+
+    return repository.get_all()
 
 
 def get_candidate_by_id(
     db: Session,
     candidate_id: int
 ):
-    candidate = (
-        db.query(Candidate)
-        .filter(Candidate.id == candidate_id)
-        .first()
-    )
+    repository = CandidateRepository(db)
+
+    candidate = repository.get_by_id(candidate_id)
 
     if not candidate:
         raise HTTPException(
@@ -50,11 +49,9 @@ def delete_candidate(
     db: Session,
     candidate_id: int
 ):
-    candidate = (
-        db.query(Candidate)
-        .filter(Candidate.id == candidate_id)
-        .first()
-    )
+    repository = CandidateRepository(db)
+
+    candidate = repository.get_by_id(candidate_id)
 
     if not candidate:
         raise HTTPException(
@@ -62,8 +59,7 @@ def delete_candidate(
             detail="Candidate not found"
         )
 
-    db.delete(candidate)
-    db.commit()
+    repository.delete(candidate)
 
     return candidate
 
@@ -73,11 +69,9 @@ def update_candidate(
     candidate_id: int,
     candidate_data: CandidateCreate
 ):
-    candidate = (
-        db.query(Candidate)
-        .filter(Candidate.id == candidate_id)
-        .first()
-    )
+    repository = CandidateRepository(db)
+
+    candidate = repository.get_by_id(candidate_id)
 
     if not candidate:
         raise HTTPException(
@@ -89,21 +83,16 @@ def update_candidate(
     candidate.email = candidate_data.email
     candidate.linkedin_url = candidate_data.linkedin_url
 
-    db.commit()
-    db.refresh(candidate)
-
-    return candidate
+    return repository.update(candidate)
 
 
 def verify_linkedin(
     db: Session,
     candidate_id: int
 ):
-    candidate = (
-        db.query(Candidate)
-        .filter(Candidate.id == candidate_id)
-        .first()
-    )
+    repository = CandidateRepository(db)
+
+    candidate = repository.get_by_id(candidate_id)
 
     if not candidate:
         raise HTTPException(
@@ -116,8 +105,7 @@ def verify_linkedin(
     else:
         candidate.verification_status = "failed"
 
-    db.commit()
-    db.refresh(candidate)
+    repository.update(candidate)
 
     return {
         "message": "Verification completed",
