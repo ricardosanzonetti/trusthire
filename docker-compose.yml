@@ -4,6 +4,8 @@ services:
       context: ./backend
     env_file:
       - ./backend/.env
+    environment:
+      POSTGRES_HOST: postgres
     ports:
       - "8000:8000"
 
