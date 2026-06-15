@@ -58,6 +58,11 @@ jobs:
           cd backend
           ruff check .
 
+      - name: Run migrations
+        run: |
+          cd backend
+          PAYTHONPATH=. alembic upgrade head
+          
       - name: Run tests
         run: |
           cd backend
