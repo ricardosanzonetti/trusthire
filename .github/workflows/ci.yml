@@ -35,7 +35,7 @@ jobs:
       POSTGRES_DB: trusthire
       POSTGRES_USER: trusthire
       POSTGRES_PASSWORD: trusthire
-      POSTGRES_HOST: postgres
+      POSTGRES_HOST: localhost
       POSTGRES_PORT: 5432
 
     steps:
