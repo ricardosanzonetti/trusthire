@@ -162,3 +162,57 @@ def test_duplicate_email():
     assert response_2.json() == {
         "detail": "Email already exists"
     }
+
+
+def test_get_candidate_not_found():
+    response = client.get(
+        "/candidates/999999"
+    )
+
+    assert response.status_code == 404
+
+    assert response.json() == {
+        "detail": "Candidate not found"
+    }
+
+
+def test_update_candidate_not_found():
+    response = client.put(
+        "/candidates/999999",
+        json={
+            "full_name": "Nobody",
+            "email": "nobody@test.com",
+            "linkedin_url": "https://linkedin.com/in/nobody"
+        }
+    )
+
+    assert response.status_code == 404
+
+    assert response.json() == {
+        "detail": "Candidate not found"
+    }
+
+
+def test_delete_candidate_not_found():
+    response = client.delete(
+        "/candidates/999999"
+    )
+
+    assert response.status_code == 404
+
+    assert response.json() == {
+        "detail": "Candidate not found"
+    }
+
+
+def test_verify_linkedin_not_found():
+    response = client.post(
+        "/candidates/999999/verify-linkedin"
+    )
+
+    assert response.status_code == 404
+
+    assert response.json() == {
+        "detail": "Candidate not found"
+    }
+        
