@@ -18,6 +18,39 @@ def test_health_endpoint():
     assert response.status_code == 200
 
 
+def test_get_candidates():
+    response = client.get("/candidates/")
+
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+
+def test_get_candidate_by_id():
+    email = unique_email("getbyid")
+
+    create_response = client.post(
+        "/candidates/",
+        json={
+            "full_name": "Get By ID User",
+            "email": email,
+            "linkedin_url": "https://linkedin.com/in/getbyid"
+        }
+    )
+
+    candidate_id = create_response.json()["id"]
+
+    response = client.get(
+        f"/candidates/{candidate_id}"
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["id"] == candidate_id
+    assert data["email"] == email
+
+
 def test_update_candidate():
     email = unique_email("update")
 
@@ -99,3 +132,33 @@ def test_verify_linkedin():
     data = response.json()
 
     assert data["verification_status"] == "verified"
+
+
+def test_duplicate_email():
+    email = unique_email("duplicate")
+
+    response_1 = client.post(
+        "/candidates/",
+        json={
+            "full_name": "First User",
+            "email": email,
+            "linkedin_url": "https://linkedin.com/in/first"
+        }
+    )
+
+    assert response_1.status_code == 200
+
+    response_2 = client.post(
+        "/candidates/",
+        json={
+            "full_name": "Second User",
+            "email": email,
+            "linkedin_url": "https://linkedin.com/in/second"
+        }
+    )
+
+    assert response_2.status_code == 409
+
+    assert response_2.json() == {
+        "detail": "Email already exists"
+    }

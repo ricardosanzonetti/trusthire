@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.candidate import Candidate
@@ -19,7 +20,14 @@ def create_candidate(
         linkedin_url=candidate_data.linkedin_url
     )
 
-    return repository.create(candidate)
+    try:
+        return repository.create(candidate)
+
+    except IntegrityError:
+        raise HTTPException(
+            status_code=409,
+            detail="Email already exists"
+        )
 
 
 def get_candidates(db: Session):
@@ -83,7 +91,14 @@ def update_candidate(
     candidate.email = candidate_data.email
     candidate.linkedin_url = candidate_data.linkedin_url
 
-    return repository.update(candidate)
+    try:
+        return repository.update(candidate)
+
+    except IntegrityError:
+        raise HTTPException(
+            status_code=409,
+            detail="Email already exists"
+        )
 
 
 def verify_linkedin(
