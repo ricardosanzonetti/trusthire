@@ -8,7 +8,7 @@ from alembic import context
 from app.core.base import Base
 from app.core.database import DATABASE_URL
 
-import app.models.candidate # noqa: F401
+import app.models # noqa: F401
 
 
 config = context.config

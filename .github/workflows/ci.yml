@@ -61,7 +61,7 @@ jobs:
       - name: Run migrations
         run: |
           cd backend
-          PAYTHONPATH=. alembic upgrade head
+          PYTHONPATH=. alembic upgrade head
           
       - name: Run tests
         run: |
