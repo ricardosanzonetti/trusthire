@@ -66,4 +66,4 @@ jobs:
       - name: Run tests
         run: |
           cd backend
-          PYTHONPATH=. pytest -v
+          PYTHONPATH=. pytest -v --cov=app --cov-report=term-missing
